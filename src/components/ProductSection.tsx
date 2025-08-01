@@ -43,47 +43,34 @@ const ProductSection = ({
     <section className={`py-12 ${className}`}>
       <div className="container mx-auto px-4">
         {/* Section Header */}
-        <div className="flex items-center justify-between mb-8">
-          <h2 className="text-3xl font-bold text-foreground">{title}</h2>
-          
-          <div className="flex items-center space-x-4">
-            {/* Navigation Arrows */}
-            <div className="flex space-x-2">
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={scrollLeft}
-                className="rounded-full hover:bg-accent"
-              >
-                <ChevronLeft className="h-4 w-4" />
-              </Button>
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={scrollRight}
-                className="rounded-full hover:bg-accent"
-              >
-                <ChevronRight className="h-4 w-4" />
-              </Button>
-            </div>
+        <div className="flex items-center justify-center mb-8">
+          <h2 className="text-3xl font-bold text-foreground text-center">{title}</h2>
+        </div>
 
-            {/* Show More Button */}
-            {showMoreButton && (
-              <Button 
-                variant="outline" 
-                onClick={onShowMore}
-                className="hover:bg-accent"
-              >
-                Shop More
-              </Button>
-            )}
-          </div>
+        {/* Navigation Arrows */}
+        <div className="flex justify-center space-x-2 mb-6">
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={scrollLeft}
+            className="rounded-full hover:bg-accent"
+          >
+            <ChevronLeft className="h-4 w-4" />
+          </Button>
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={scrollRight}
+            className="rounded-full hover:bg-accent"
+          >
+            <ChevronRight className="h-4 w-4" />
+          </Button>
         </div>
 
         {/* Products Grid */}
         <div
           id={`scroll-${title.replace(/\s+/g, '-').toLowerCase()}`}
-          className="flex space-x-6 overflow-x-auto scroll-container pb-4"
+          className="flex space-x-6 overflow-x-auto scroll-container pb-4 mb-8"
         >
           {products.map((product) => (
             <div key={product.id} className="flex-none w-72">
@@ -91,6 +78,19 @@ const ProductSection = ({
             </div>
           ))}
         </div>
+
+        {/* Show More Button */}
+        {showMoreButton && (
+          <div className="flex justify-center">
+            <Button 
+              variant="outline" 
+              onClick={onShowMore}
+              className="hover:bg-accent"
+            >
+              Shop More
+            </Button>
+          </div>
+        )}
       </div>
     </section>
   );

@@ -75,6 +75,30 @@ export const categories = [
   "Architecture"
 ];
 
+// Visual Category Data with Images
+export const visualCategories = [
+  {
+    id: "film",
+    title: "Film Wall Art",
+    image: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    id: "sports",
+    title: "Sports Wall Art", 
+    image: "https://images.unsplash.com/photo-1466721591366-2d5fba72006d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    id: "scenic",
+    title: "Scenic Wall Art",
+    image: "https://images.unsplash.com/photo-1472396961693-142e6e269027?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    id: "ocean",
+    title: "Ocean Wall Art",
+    image: "https://images.unsplash.com/photo-1500375592092-40eb2168fd21?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+  }
+];
+
 // Customer Reviews
 export const customerReviews = [
   {

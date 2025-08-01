@@ -1,10 +1,11 @@
 import { Star, Upload, Grid3X3, Maximize, Frame } from "lucide-react";
 import HeroSlideshow from "@/components/HeroSlideshow";
 import ProductSection from "@/components/ProductSection";
+import CategoryCard from "@/components/CategoryCard";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { sampleProducts, categories, customerReviews } from "@/data/sampleData";
+import { sampleProducts, categories, customerReviews, visualCategories } from "@/data/sampleData";
 import abstractLandscape from "@/assets/product-abstract-landscape.jpg";
 
 const HomePage = () => {
@@ -17,15 +18,40 @@ const HomePage = () => {
       <section className="py-12 bg-secondary">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-8">Shop by Category</h2>
-          <div className="flex space-x-6 overflow-x-auto scroll-container pb-4">
-            {categories.map((category, index) => (
-              <Button
-                key={category}
-                variant="outline"
-                className="flex-none px-6 py-3 rounded-full hover:bg-primary hover:text-primary-foreground transition-colors"
-              >
-                {category}
-              </Button>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {visualCategories.map((category) => (
+              <CategoryCard
+                key={category.id}
+                title={category.title}
+                image={category.image}
+                onClick={() => console.log(`Navigate to ${category.id}`)}
+              />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Reviews Section */}
+      <section className="py-16">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold text-center mb-12">What Our Customers Say</h2>
+          
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {customerReviews.map((review) => (
+              <Card key={review.id} className="p-6 gallery-card">
+                <div className="flex items-center mb-4">
+                  {[...Array(review.rating)].map((_, i) => (
+                    <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                  ))}
+                </div>
+                <p className="text-muted-foreground mb-4 text-sm leading-relaxed">
+                  "{review.text}"
+                </p>
+                <div>
+                  <p className="font-semibold text-sm">{review.name}</p>
+                  <p className="text-xs text-muted-foreground">{review.location}</p>
+                </div>
+              </Card>
             ))}
           </div>
         </div>
@@ -110,31 +136,6 @@ const HomePage = () => {
         className="bg-accent"
       />
 
-      {/* Reviews Section */}
-      <section className="py-16">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12">What Our Customers Say</h2>
-          
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {customerReviews.map((review) => (
-              <Card key={review.id} className="p-6 gallery-card">
-                <div className="flex items-center mb-4">
-                  {[...Array(review.rating)].map((_, i) => (
-                    <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                  ))}
-                </div>
-                <p className="text-muted-foreground mb-4 text-sm leading-relaxed">
-                  "{review.text}"
-                </p>
-                <div>
-                  <p className="font-semibold text-sm">{review.name}</p>
-                  <p className="text-xs text-muted-foreground">{review.location}</p>
-                </div>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* Story Section */}
       <section className="py-16 bg-secondary">
