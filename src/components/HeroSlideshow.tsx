@@ -83,23 +83,6 @@ const HeroSlideshow = () => {
         </div>
       </div>
 
-      {/* Navigation */}
-      <Button
-        variant="ghost"
-        size="icon"
-        onClick={prevSlide}
-        className="absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-black/20 hover:bg-black/40 text-white"
-      >
-        <ChevronLeft className="h-6 w-6" />
-      </Button>
-      <Button
-        variant="ghost"
-        size="icon"
-        onClick={nextSlide}
-        className="absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-black/20 hover:bg-black/40 text-white"
-      >
-        <ChevronRight className="h-6 w-6" />
-      </Button>
 
       {/* Indicators */}
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex space-x-2 z-20">
