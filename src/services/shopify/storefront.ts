@@ -109,7 +109,7 @@ class ShopifyStorefrontService {
       const filteredProducts = products.filter((product: any) => 
         product.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         product.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        product.tags.some((tag: string) => tag.toLowerCase().includes(searchTerm.toLowerCase()))
+        (product.tags && product.tags.some && product.tags.some((tag: string) => tag.toLowerCase().includes(searchTerm.toLowerCase())))
       );
 
       return this.transformProducts(filteredProducts.slice(0, first));
@@ -141,7 +141,7 @@ class ShopifyStorefrontService {
       // Filter by product type or tags
       const categoryProducts = products.filter((product: any) => 
         product.productType.toLowerCase() === category.toLowerCase() ||
-        product.tags.some((tag: string) => tag.toLowerCase() === category.toLowerCase())
+        (product.tags && product.tags.some && product.tags.some((tag: string) => tag.toLowerCase() === category.toLowerCase()))
       );
 
       return this.transformProducts(categoryProducts.slice(0, count));
