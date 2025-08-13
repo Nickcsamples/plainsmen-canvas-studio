@@ -6,6 +6,7 @@ import Layout from "./components/Layout";
 import HomePage from "./pages/HomePage";
 import ProductDetailPage from "./pages/ProductDetailPage";
 import CartPage from "./pages/CartPage";
+import SearchPage from "./pages/SearchPage";
 import CheckoutSuccessPage from "./pages/CheckoutSuccessPage";
 import CheckoutCancelPage from "./pages/CheckoutCancelPage";
 import CreateCanvasPage from "./pages/CreateCanvasPage";
@@ -23,6 +24,7 @@ const App = () => (
         <Route path="/" element={<HomePage />} />
         <Route path="/product/:handle" element={<ProductDetailPage />} />
         <Route path="/cart" element={<CartPage />} />
+        <Route path="/search" element={<SearchPage />} />
         <Route path="/checkout/success" element={<CheckoutSuccessPage />} />
         <Route path="/checkout/cancel" element={<CheckoutCancelPage />} />
         <Route path="/create-canvas" element={<CreateCanvasPage />} />

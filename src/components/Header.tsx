@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Search, Heart, User, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,7 +8,9 @@ import CartDropdown from "./CartDropdown";
 const Header = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
   const location = useLocation();
+  const navigate = useNavigate();
 
   const navItems = [
     { name: "Create Canvas", path: "/create-canvas" },
@@ -25,6 +27,15 @@ const Header = () => {
   ];
 
   const isActive = (path: string) => location.pathname === path;
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchTerm.trim()) {
+      navigate(`/search?q=${encodeURIComponent(searchTerm.trim())}`);
+      setIsSearchOpen(false);
+      setSearchTerm("");
+    }
+  };
 
   return (
     <header className="sticky top-0 z-50 bg-background border-b border-border">
@@ -90,13 +101,16 @@ const Header = () => {
         {/* Search Bar */}
         {isSearchOpen && (
           <div className="pb-4">
-            <div className="max-w-md mx-auto">
+            <form onSubmit={handleSearch} className="max-w-md mx-auto">
               <Input
                 type="search"
                 placeholder="Search artwork..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full"
+                autoFocus
               />
-            </div>
+            </form>
           </div>
         )}
 
