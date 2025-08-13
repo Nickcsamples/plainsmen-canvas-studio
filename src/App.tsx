@@ -2,6 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Routes, Route } from "react-router-dom";
+import { PWAInstallBanner } from "./components/PWAInstallBanner";
 import Layout from "./components/Layout";
 import HomePage from "./pages/HomePage";
 import ProductDetailPage from "./pages/ProductDetailPage";
@@ -41,6 +42,7 @@ const App = () => (
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Layout>
+    <PWAInstallBanner />
   </TooltipProvider>
 );
 
