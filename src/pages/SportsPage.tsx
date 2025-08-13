@@ -13,21 +13,24 @@ const SportsPage = () => {
   const sportFilters = ["Football", "Basketball", "Baseball", "Soccer", "Hockey", "Tennis"];
   const styleFilters = ["Action Shots", "Portraits", "Vintage", "Abstract"];
 
-  // Create sports-specific products
+  // Create sports-specific products with handles
+  const sportsTitles = [
+    "Championship Victory",
+    "Game Winning Shot",
+    "Athletic Excellence", 
+    "Speed & Power",
+    "Team Spirit",
+    "Olympic Moment",
+    "Victory Celebration",
+    "Sports Legend"
+  ];
+
   const sportsProducts = sampleProducts.map((product, index) => ({
     ...product,
     id: `sports-${product.id}`,
+    handle: `sports-${sportsTitles[index]?.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '') || product.title.toLowerCase().replace(/\s+/g, '-')}-${index}`,
     category: "Sports",
-    title: [
-      "Championship Victory",
-      "Game Winning Shot",
-      "Athletic Excellence", 
-      "Speed & Power",
-      "Team Spirit",
-      "Olympic Moment",
-      "Victory Celebration",
-      "Sports Legend"
-    ][index] || product.title
+    title: sportsTitles[index] || product.title
   }));
 
   return (

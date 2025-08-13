@@ -1,9 +1,11 @@
 import { Heart } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
 interface ProductCardProps {
   id: string;
+  handle?: string;
   image: string;
   title: string;
   price: string;
@@ -14,6 +16,7 @@ interface ProductCardProps {
 
 const ProductCard = ({ 
   id, 
+  handle,
   image, 
   title, 
   price, 
@@ -21,8 +24,18 @@ const ProductCard = ({
   isWishlisted = false, 
   onWishlistToggle 
 }: ProductCardProps) => {
+  const navigate = useNavigate();
+
+  const handleCardClick = () => {
+    if (handle) {
+      navigate(`/product/${handle}`);
+    }
+  };
   return (
-    <div className="group relative gallery-card rounded-lg overflow-hidden bg-card">
+    <div 
+      className="group relative gallery-card rounded-lg overflow-hidden bg-card cursor-pointer"
+      onClick={handleCardClick}
+    >
       {/* Image Container */}
       <div className="relative aspect-square overflow-hidden">
         <img
@@ -38,7 +51,10 @@ const ProductCard = ({
           className={`absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity ${
             isWishlisted ? "text-red-500" : "text-white hover:text-red-500"
           } bg-black/20 hover:bg-black/40`}
-          onClick={() => onWishlistToggle?.(id)}
+          onClick={(e) => {
+            e.stopPropagation();
+            onWishlistToggle?.(id);
+          }}
         >
           <Heart className={`h-4 w-4 ${isWishlisted ? "fill-current" : ""}`} />
         </Button>

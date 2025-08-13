@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { Routes, Route } from "react-router-dom";
 import Layout from "./components/Layout";
 import HomePage from "./pages/HomePage";
+import ProductDetailPage from "./pages/ProductDetailPage";
 import CreateCanvasPage from "./pages/CreateCanvasPage";
 import ArtistsPage from "./pages/ArtistsPage";
 import FilmPage from "./pages/FilmPage";
@@ -17,6 +18,7 @@ const App = () => (
     <Layout>
       <Routes>
         <Route path="/" element={<HomePage />} />
+        <Route path="/product/:handle" element={<ProductDetailPage />} />
         <Route path="/create-canvas" element={<CreateCanvasPage />} />
         <Route path="/artists" element={<ArtistsPage />} />
         <Route path="/film" element={<FilmPage />} />

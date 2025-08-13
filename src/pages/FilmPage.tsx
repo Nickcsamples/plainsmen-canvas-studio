@@ -14,21 +14,24 @@ const FilmPage = () => {
   const colorFilters = ["Black & White", "Color", "Sepia", "Vintage"];
   const orientationFilters = ["Portrait", "Landscape", "Square"];
 
-  // Create film-specific products
+  // Create film-specific products with handles
+  const filmTitles = [
+    "Casablanca Classic",
+    "The Godfather Portrait", 
+    "Pulp Fiction Scene",
+    "Citizen Kane Moment",
+    "Vertigo Spiral",
+    "2001 Space Odyssey",
+    "Apocalypse Now",
+    "Taxi Driver Night"
+  ];
+
   const filmProducts = sampleProducts.map((product, index) => ({
     ...product,
     id: `film-${product.id}`,
+    handle: `film-${filmTitles[index]?.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '') || product.title.toLowerCase().replace(/\s+/g, '-')}-${index}`,
     category: "Film",
-    title: [
-      "Casablanca Classic",
-      "The Godfather Portrait", 
-      "Pulp Fiction Scene",
-      "Citizen Kane Moment",
-      "Vertigo Spiral",
-      "2001 Space Odyssey",
-      "Apocalypse Now",
-      "Taxi Driver Night"
-    ][index] || product.title
+    title: filmTitles[index] || product.title
   }));
 
   return (
