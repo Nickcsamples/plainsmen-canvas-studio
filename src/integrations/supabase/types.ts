@@ -14,6 +14,75 @@ export type Database = {
   }
   public: {
     Tables: {
+      canvas_projects: {
+        Row: {
+          created_at: string
+          frame: string
+          id: string
+          image_url: string | null
+          layout: string
+          price: number
+          size: string
+          title: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          frame: string
+          id?: string
+          image_url?: string | null
+          layout: string
+          price: number
+          size: string
+          title: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          frame?: string
+          id?: string
+          image_url?: string | null
+          layout?: string
+          price?: number
+          size?: string
+          title?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      recently_viewed: {
+        Row: {
+          id: string
+          product_id: string
+          product_image: string | null
+          product_price: number | null
+          product_title: string
+          user_id: string | null
+          viewed_at: string
+        }
+        Insert: {
+          id?: string
+          product_id: string
+          product_image?: string | null
+          product_price?: number | null
+          product_title: string
+          user_id?: string | null
+          viewed_at?: string
+        }
+        Update: {
+          id?: string
+          product_id?: string
+          product_image?: string | null
+          product_price?: number | null
+          product_title?: string
+          user_id?: string | null
+          viewed_at?: string
+        }
+        Relationships: []
+      }
       Users: {
         Row: {
           Address: string
@@ -35,12 +104,50 @@ export type Database = {
         }
         Relationships: []
       }
+      wishlists: {
+        Row: {
+          created_at: string
+          id: string
+          product_id: string
+          product_image: string | null
+          product_price: number | null
+          product_title: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          product_id: string
+          product_image?: string | null
+          product_price?: number | null
+          product_title: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          product_id?: string
+          product_image?: string | null
+          product_price?: number | null
+          product_title?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      upsert_recently_viewed: {
+        Args: {
+          p_product_id: string
+          p_product_title: string
+          p_product_image: string
+          p_product_price: number
+        }
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never
