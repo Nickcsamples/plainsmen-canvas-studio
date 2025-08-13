@@ -17,6 +17,8 @@ import SportsPage from "./pages/SportsPage";
 import AuthPage from "./pages/AuthPage";
 import WishlistPage from "./pages/WishlistPage";
 import DashboardPage from "./pages/DashboardPage";
+import QATestingPage from "./pages/QATestingPage";
+import LaunchChecklistPage from "./pages/LaunchChecklistPage";
 import NotFound from "./pages/NotFound";
 
 const App = () => (
@@ -38,6 +40,8 @@ const App = () => (
         <Route path="/auth" element={<AuthPage />} />
         <Route path="/wishlist" element={<WishlistPage />} />
         <Route path="/dashboard" element={<DashboardPage />} />
+        <Route path="/qa-testing" element={<QATestingPage />} />
+        <Route path="/launch-checklist" element={<LaunchChecklistPage />} />
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
         <Route path="*" element={<NotFound />} />
       </Routes>
