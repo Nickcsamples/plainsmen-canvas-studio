@@ -13,6 +13,8 @@ import CreateCanvasPage from "./pages/CreateCanvasPage";
 import ArtistsPage from "./pages/ArtistsPage";
 import FilmPage from "./pages/FilmPage";
 import SportsPage from "./pages/SportsPage";
+import AuthPage from "./pages/AuthPage";
+import WishlistPage from "./pages/WishlistPage";
 import NotFound from "./pages/NotFound";
 
 const App = () => (
@@ -31,6 +33,8 @@ const App = () => (
         <Route path="/artists" element={<ArtistsPage />} />
         <Route path="/film" element={<FilmPage />} />
         <Route path="/sports" element={<SportsPage />} />
+        <Route path="/auth" element={<AuthPage />} />
+        <Route path="/wishlist" element={<WishlistPage />} />
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
         <Route path="*" element={<NotFound />} />
       </Routes>

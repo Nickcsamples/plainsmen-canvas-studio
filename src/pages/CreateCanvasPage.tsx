@@ -1,242 +1,375 @@
-import { useState } from "react";
-import { Heart, Upload, Star } from "lucide-react";
+import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Input } from "@/components/ui/input";
-import abstractLandscape from "@/assets/product-abstract-landscape.jpg";
+import { Label } from "@/components/ui/label";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useCart } from "@/hooks/useShopify";
+import { useAuthUser, useUploadImage, useCreateCanvasProject } from "@/hooks/useSupabase";
+import { toast } from "sonner";
+import { Upload, Heart, Star } from "lucide-react";
 
-const CreateCanvasPage = () => {
-  const [selectedLayout, setSelectedLayout] = useState("1");
+// Sample layout, size, and frame data
+const layouts = [
+  { id: "portrait", name: "Portrait", image: "/placeholder.svg", description: "Classic vertical layout" },
+  { id: "landscape", name: "Landscape", image: "/placeholder.svg", description: "Wide horizontal layout" },
+  { id: "square", name: "Square", image: "/placeholder.svg", description: "Perfect square format" },
+];
+
+const sizes = [
+  { id: "small", name: "Small", dimensions: "12\" x 16\"", price: 49.99 },
+  { id: "medium", name: "Medium", dimensions: "16\" x 20\"", price: 79.99 },
+  { id: "large", name: "Large", dimensions: "20\" x 24\"", price: 129.99 },
+  { id: "xl", name: "Extra Large", dimensions: "24\" x 30\"", price: 179.99 },
+];
+
+const frames = [
+  { id: "none", name: "No Frame", price: 0, description: "Canvas only" },
+  { id: "black", name: "Black Frame", price: 29.99, description: "Elegant black wood frame" },
+  { id: "white", name: "White Frame", price: 29.99, description: "Clean white wood frame" },
+  { id: "natural", name: "Natural Wood", price: 39.99, description: "Natural oak wood frame" },
+];
+
+export default function CreateCanvasPage() {
+  const [selectedLayout, setSelectedLayout] = useState("portrait");
   const [selectedSize, setSelectedSize] = useState("medium");
-  const [selectedFrame, setSelectedFrame] = useState("gallery-wrapped");
+  const [selectedFrame, setSelectedFrame] = useState("none");
+  const [uploadedImage, setUploadedImage] = useState<string | null>(null);
+  const [title, setTitle] = useState("");
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  
+  const { data: user, isLoading: userLoading } = useAuthUser();
+  const { addToCart } = useCart();
+  const uploadImage = useUploadImage();
+  const createCanvasProject = useCreateCanvasProject();
 
-  const layouts = [
-    { id: "1", name: "Single Panel", panels: 1 },
-    { id: "3", name: "3 Panels", panels: 3 },
-    { id: "4", name: "4 Panels", panels: 4 },
-    { id: "5", name: "5 Panels", panels: 5 },
-  ];
+  const currentSize = sizes.find(s => s.id === selectedSize);
+  const currentFrame = frames.find(f => f.id === selectedFrame);
+  const totalPrice = (currentSize?.price || 0) + (currentFrame?.price || 0);
 
-  const sizes = [
-    { id: "small", name: "Small", dimensions: "16x12", price: "$74.99" },
-    { id: "medium", name: "Medium", dimensions: "24x18", price: "$94.99" },
-    { id: "large", name: "Large", dimensions: "32x24", price: "$124.99" },
-  ];
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
 
-  const frames = [
-    { id: "gallery-wrapped", name: "Gallery Wrapped", description: "No frame needed" },
-    { id: "black-frame", name: "Black Frame", description: "Classic black wood frame" },
-    { id: "white-frame", name: "White Frame", description: "Clean white wood frame" },
-    { id: "natural-wood", name: "Natural Wood", description: "Natural wood grain frame" },
-  ];
+    if (!user) {
+      toast.error("Please sign in to upload images");
+      return;
+    }
 
-  const selectedSizeData = sizes.find(size => size.id === selectedSize);
+    // Show preview immediately
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      setUploadedImage(e.target?.result as string);
+    };
+    reader.readAsDataURL(file);
+
+    // Upload to Supabase
+    uploadImage.mutate(file, {
+      onSuccess: (url) => {
+        setUploadedImage(url);
+        toast.success("Image uploaded successfully!");
+      },
+    });
+  };
+
+  const handleSaveProject = () => {
+    if (!user) {
+      toast.error("Please sign in to save projects");
+      return;
+    }
+
+    if (!uploadedImage || !title.trim()) {
+      toast.error("Please add a title and upload an image");
+      return;
+    }
+
+    createCanvasProject.mutate({
+      title: title.trim(),
+      image_url: uploadedImage,
+      layout: selectedLayout,
+      size: selectedSize,
+      frame: selectedFrame,
+      price: totalPrice,
+    });
+  };
+
+  const handleAddToCart = () => {
+    if (!uploadedImage) {
+      toast.error("Please upload an image first");
+      return;
+    }
+
+    const customProduct = {
+      id: `custom-canvas-${Date.now()}`,
+      title: `Custom Canvas Print - ${title || 'Untitled'}`,
+      price: totalPrice,
+      images: [{ src: uploadedImage, alt: "Custom Canvas" }],
+      description: `${currentSize?.dimensions} ${currentFrame?.name !== "No Frame" ? `with ${currentFrame?.name}` : ""}`,
+      variants: [
+        {
+          id: `variant-${Date.now()}`,
+          title: "Custom Canvas",
+          price: totalPrice,
+          available: true,
+          inventoryQuantity: 999,
+        }
+      ],
+    };
+
+    addToCart.mutate(
+      { 
+        variantId: customProduct.variants[0].id,
+        quantity: 1 
+      },
+      {
+        onSuccess: () => {
+          toast.success("Custom canvas added to cart!");
+        }
+      }
+    );
+  };
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Breadcrumb */}
-      <div className="container mx-auto px-4 py-4">
-        <nav className="text-sm text-muted-foreground">
-          <span>Home</span> / <span className="text-foreground">Create Canvas</span>
-        </nav>
-      </div>
-
-      <div className="container mx-auto px-4 pb-12">
-        <div className="grid lg:grid-cols-2 gap-12">
-          {/* Product Images */}
-          <div className="space-y-4">
-            <div className="aspect-square overflow-hidden rounded-lg bg-accent">
-              <img
-                src={abstractLandscape}
-                alt="Custom Canvas Preview"
-                className="w-full h-full object-cover"
-              />
-            </div>
-            
-            <div className="grid grid-cols-4 gap-4">
-              {[...Array(4)].map((_, i) => (
-                <div key={i} className="aspect-square overflow-hidden rounded-lg bg-accent border-2 border-transparent hover:border-primary cursor-pointer transition-colors">
-                  <img
-                    src={abstractLandscape}
-                    alt={`Preview ${i + 1}`}
-                    className="w-full h-full object-cover"
-                  />
+    <div className="container mx-auto px-4 py-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* Left Column - Image Preview */}
+        <div className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Canvas Preview</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <AspectRatio ratio={selectedLayout === "portrait" ? 3/4 : selectedLayout === "landscape" ? 4/3 : 1}>
+                <div className="w-full h-full bg-muted flex items-center justify-center text-muted-foreground overflow-hidden rounded-lg">
+                  {uploadedImage ? (
+                    <img 
+                      src={uploadedImage} 
+                      alt="Canvas preview" 
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    "Upload your image to see preview"
+                  )}
                 </div>
-              ))}
-            </div>
-          </div>
+              </AspectRatio>
+            </CardContent>
+          </Card>
 
-          {/* Product Info */}
-          <div className="space-y-8">
-            <div>
-              <h1 className="text-3xl font-bold mb-4">Custom Canvas Print</h1>
+          {/* Image Upload */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Upload Image</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="canvas-title">Canvas Title</Label>
+                <Input
+                  id="canvas-title"
+                  placeholder="Enter a title for your canvas"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                />
+              </div>
               
-              <div className="flex items-center space-x-2 mb-4">
+              <div 
+                className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-6 text-center cursor-pointer hover:border-muted-foreground/50 transition-colors"
+                onClick={() => fileInputRef.current?.click()}
+              >
+                <Upload className="mx-auto h-8 w-8 text-muted-foreground mb-2" />
+                <p className="text-muted-foreground">
+                  {uploadImage.isPending ? "Uploading..." : "Click to upload your image"}
+                </p>
+                {uploadImage.isPending && <Skeleton className="h-2 w-full mt-2" />}
+              </div>
+              
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleImageUpload}
+                className="hidden"
+              />
+              
+              {!user && (
+                <p className="text-sm text-muted-foreground">
+                  Please sign in to upload images and save projects
+                </p>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Right Column - Customization Options */}
+        <div className="space-y-6">
+          {/* Product Info */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center justify-between">
+                Custom Canvas Print
+                <Button variant="ghost" size="icon">
+                  <Heart className="h-4 w-4" />
+                </Button>
+              </CardTitle>
+              <div className="flex items-center space-x-2">
                 <div className="flex items-center">
                   {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                    <Star key={i} className="h-4 w-4 fill-current text-yellow-400" />
                   ))}
                 </div>
-                <span className="text-sm text-muted-foreground">(2,847 reviews)</span>
+                <span className="text-sm text-muted-foreground">(1,234 reviews)</span>
               </div>
+            </CardHeader>
+            <CardContent>
+              <p className="text-3xl font-bold text-primary mb-4">
+                ${totalPrice.toFixed(2)}
+              </p>
+              <p className="text-muted-foreground">
+                Create your own custom canvas print with premium materials and professional printing.
+              </p>
+            </CardContent>
+          </Card>
 
-              <div className="flex items-center justify-between mb-6">
-                <p className="text-3xl font-bold text-primary">
-                  {selectedSizeData?.price}
-                </p>
-                <Button variant="ghost" size="icon" className="hover:bg-accent">
-                  <Heart className="h-5 w-5" />
-                </Button>
-              </div>
-            </div>
-
-            {/* Customization Steps */}
-            <div className="space-y-8">
-              {/* Step 1: Choose Image */}
-              <div>
-                <h3 className="text-lg font-semibold mb-4">1. Choose Image</h3>
-                <Card className="p-6 border-dashed border-2 border-muted-foreground/30 hover:border-primary transition-colors cursor-pointer">
-                  <div className="text-center">
-                    <Upload className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-                    <p className="text-lg font-medium mb-2">Upload Your Image</p>
-                    <p className="text-sm text-muted-foreground mb-4">
-                      Supports JPG, PNG, HEIC files up to 50MB
-                    </p>
-                    <Input type="file" className="hidden" accept="image/*" />
-                    <Button>Browse Files</Button>
+          {/* Layout Selection */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Choose Layout</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 gap-3">
+                {layouts.map((layout) => (
+                  <div
+                    key={layout.id}
+                    className={`border rounded-lg p-4 cursor-pointer transition-colors ${
+                      selectedLayout === layout.id
+                        ? "border-primary bg-primary/5"
+                        : "border-muted hover:border-primary/50"
+                    }`}
+                    onClick={() => setSelectedLayout(layout.id)}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="font-medium">{layout.name}</p>
+                        <p className="text-sm text-muted-foreground">{layout.description}</p>
+                      </div>
+                    </div>
                   </div>
-                </Card>
+                ))}
               </div>
+            </CardContent>
+          </Card>
 
-              {/* Step 2: Choose Layout */}
-              <div>
-                <h3 className="text-lg font-semibold mb-4">2. Choose Layout</h3>
-                <div className="grid grid-cols-2 gap-4">
-                  {layouts.map((layout) => (
-                    <Card
-                      key={layout.id}
-                      className={`p-4 cursor-pointer transition-colors ${
-                        selectedLayout === layout.id
-                          ? "border-primary bg-primary/5"
-                          : "hover:bg-accent"
-                      }`}
-                      onClick={() => setSelectedLayout(layout.id)}
-                    >
-                      <div className="text-center">
-                        <div className="grid grid-cols-1 gap-1 mb-2 h-12 items-center">
-                          {layout.panels === 1 && (
-                            <div className="bg-muted rounded h-8"></div>
-                          )}
-                          {layout.panels === 3 && (
-                            <div className="grid grid-cols-3 gap-1">
-                              <div className="bg-muted rounded h-8"></div>
-                              <div className="bg-muted rounded h-8"></div>
-                              <div className="bg-muted rounded h-8"></div>
-                            </div>
-                          )}
-                          {layout.panels === 4 && (
-                            <div className="grid grid-cols-2 gap-1">
-                              <div className="bg-muted rounded h-6"></div>
-                              <div className="bg-muted rounded h-6"></div>
-                              <div className="bg-muted rounded h-6"></div>
-                              <div className="bg-muted rounded h-6"></div>
-                            </div>
-                          )}
-                          {layout.panels === 5 && (
-                            <div className="grid grid-cols-5 gap-1">
-                              {[...Array(5)].map((_, i) => (
-                                <div key={i} className="bg-muted rounded h-8"></div>
-                              ))}
-                            </div>
-                          )}
-                        </div>
-                        <p className="text-sm font-medium">{layout.name}</p>
+          {/* Size Selection */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Choose Size</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 gap-3">
+                {sizes.map((size) => (
+                  <div
+                    key={size.id}
+                    className={`border rounded-lg p-4 cursor-pointer transition-colors ${
+                      selectedSize === size.id
+                        ? "border-primary bg-primary/5"
+                        : "border-muted hover:border-primary/50"
+                    }`}
+                    onClick={() => setSelectedSize(size.id)}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="font-medium">{size.name}</p>
+                        <p className="text-sm text-muted-foreground">{size.dimensions}</p>
                       </div>
-                    </Card>
-                  ))}
-                </div>
+                      <p className="font-semibold">${size.price}</p>
+                    </div>
+                  </div>
+                ))}
               </div>
+            </CardContent>
+          </Card>
 
-              {/* Step 3: Choose Size */}
-              <div>
-                <h3 className="text-lg font-semibold mb-4">3. Choose Size</h3>
-                <div className="space-y-3">
-                  {sizes.map((size) => (
-                    <Card
-                      key={size.id}
-                      className={`p-4 cursor-pointer transition-colors ${
-                        selectedSize === size.id
-                          ? "border-primary bg-primary/5"
-                          : "hover:bg-accent"
-                      }`}
-                      onClick={() => setSelectedSize(size.id)}
-                    >
-                      <div className="flex justify-between items-center">
-                        <div>
-                          <p className="font-medium">{size.name}</p>
-                          <p className="text-sm text-muted-foreground">{size.dimensions}"</p>
-                        </div>
-                        <p className="font-semibold">{size.price}</p>
-                      </div>
-                    </Card>
-                  ))}
-                </div>
-              </div>
-
-              {/* Step 4: Choose Frame */}
-              <div>
-                <h3 className="text-lg font-semibold mb-4">4. Choose Frame</h3>
-                <div className="space-y-3">
-                  {frames.map((frame) => (
-                    <Card
-                      key={frame.id}
-                      className={`p-4 cursor-pointer transition-colors ${
-                        selectedFrame === frame.id
-                          ? "border-primary bg-primary/5"
-                          : "hover:bg-accent"
-                      }`}
-                      onClick={() => setSelectedFrame(frame.id)}
-                    >
+          {/* Frame Selection */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Choose Frame</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 gap-3">
+                {frames.map((frame) => (
+                  <div
+                    key={frame.id}
+                    className={`border rounded-lg p-4 cursor-pointer transition-colors ${
+                      selectedFrame === frame.id
+                        ? "border-primary bg-primary/5"
+                        : "border-muted hover:border-primary/50"
+                    }`}
+                    onClick={() => setSelectedFrame(frame.id)}
+                  >
+                    <div className="flex items-center justify-between">
                       <div>
                         <p className="font-medium">{frame.name}</p>
                         <p className="text-sm text-muted-foreground">{frame.description}</p>
                       </div>
-                    </Card>
-                  ))}
+                      <p className="font-semibold">
+                        {frame.price === 0 ? "Free" : `+$${frame.price}`}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Project Actions */}
+          <Card>
+            <CardContent className="pt-6">
+              <div className="space-y-3">
+                {user && uploadedImage && (
+                  <Button 
+                    onClick={handleSaveProject}
+                    variant="outline"
+                    className="w-full"
+                    disabled={createCanvasProject.isPending}
+                  >
+                    {createCanvasProject.isPending ? "Saving..." : "Save Project"}
+                  </Button>
+                )}
+                
+                <Button 
+                  onClick={handleAddToCart}
+                  className="w-full"
+                  size="lg"
+                  disabled={!uploadedImage || addToCart.isPending}
+                >
+                  {addToCart.isPending ? "Adding..." : `Add to Cart - $${totalPrice.toFixed(2)}`}
+                </Button>
+              </div>
+
+              {/* Features */}
+              <div className="space-y-3 pt-6 mt-6 border-t">
+                <div className="flex items-center space-x-3">
+                  <Badge variant="secondary">Premium Canvas</Badge>
+                  <span className="text-sm text-muted-foreground">Museum-quality materials</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <Badge variant="secondary">Fade Resistant</Badge>
+                  <span className="text-sm text-muted-foreground">Long-lasting inks</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <Badge variant="secondary">Ready to Hang</Badge>
+                  <span className="text-sm text-muted-foreground">Pre-installed hanging hardware</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <Badge variant="secondary">Made in USA</Badge>
+                  <span className="text-sm text-muted-foreground">Locally crafted</span>
                 </div>
               </div>
-            </div>
-
-            {/* Add to Cart */}
-            <Button size="lg" className="w-full btn-gallery">
-              Add to Cart
-            </Button>
-
-            {/* Features */}
-            <div className="space-y-3 pt-6 border-t">
-              <div className="flex items-center space-x-3">
-                <Badge variant="secondary">Premium Canvas</Badge>
-                <span className="text-sm text-muted-foreground">Museum-quality materials</span>
-              </div>
-              <div className="flex items-center space-x-3">
-                <Badge variant="secondary">Fade Resistant</Badge>
-                <span className="text-sm text-muted-foreground">Long-lasting inks</span>
-              </div>
-              <div className="flex items-center space-x-3">
-                <Badge variant="secondary">Ready to Hang</Badge>
-                <span className="text-sm text-muted-foreground">Pre-installed hanging hardware</span>
-              </div>
-              <div className="flex items-center space-x-3">
-                <Badge variant="secondary">Made in USA</Badge>
-                <span className="text-sm text-muted-foreground">Locally crafted</span>
-              </div>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>
   );
-};
-
-export default CreateCanvasPage;
+}

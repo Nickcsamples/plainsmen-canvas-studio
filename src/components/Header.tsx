@@ -74,13 +74,17 @@ const Header = () => {
             </Button>
 
             {/* Wishlist */}
-            <Button variant="ghost" size="icon" className="hover:bg-accent">
-              <Heart className="h-5 w-5" />
+            <Button variant="ghost" size="icon" className="hover:bg-accent" asChild>
+              <Link to="/wishlist">
+                <Heart className="h-5 w-5" />
+              </Link>
             </Button>
 
             {/* Account */}
-            <Button variant="ghost" size="icon" className="hover:bg-accent">
-              <User className="h-5 w-5" />
+            <Button variant="ghost" size="icon" className="hover:bg-accent" asChild>
+              <Link to="/auth">
+                <User className="h-5 w-5" />
+              </Link>
             </Button>
 
             {/* Cart */}
