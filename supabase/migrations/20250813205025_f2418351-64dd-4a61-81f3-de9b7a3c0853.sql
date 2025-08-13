@@ -1,0 +1,2 @@
+-- Set up Shopify integration secrets
+-- Note: These will be configured via the Supabase dashboard secrets interface

@@ -5,10 +5,18 @@ import CategoryCard from "@/components/CategoryCard";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { sampleProducts, categories, customerReviews, visualCategories } from "@/data/sampleData";
+import { customerReviews, visualCategories } from "@/data/sampleData";
+import { useFeaturedProducts, useProductsByCategory } from "@/hooks/useShopify";
 import abstractLandscape from "@/assets/product-abstract-landscape.jpg";
 
 const HomePage = () => {
+  // Fetch Shopify data
+  const { data: featuredProducts, isLoading: featuredLoading } = useFeaturedProducts(8);
+  const { data: landscapeProducts, isLoading: landscapeLoading } = useProductsByCategory('landscape', 8);
+  const { data: filmProducts, isLoading: filmLoading } = useProductsByCategory('film', 8);
+  const { data: abstractProducts, isLoading: abstractLoading } = useProductsByCategory('abstract', 8);
+  const { data: sportsProducts, isLoading: sportsLoading } = useProductsByCategory('sports', 8);
+
   return (
     <div className="min-h-screen">
       {/* Hero Slideshow */}
@@ -60,19 +68,22 @@ const HomePage = () => {
       {/* Product Sections */}
       <ProductSection 
         title="Best Sellers" 
-        products={sampleProducts}
+        products={featuredProducts || []}
         showMoreButton={true}
+        isLoading={featuredLoading}
       />
 
       <ProductSection 
         title="What's Hot" 
-        products={sampleProducts.slice().reverse()}
+        products={abstractProducts || []}
         className="bg-accent"
+        isLoading={abstractLoading}
       />
 
       <ProductSection 
         title="Landscape Collection" 
-        products={sampleProducts.slice(0, 6)}
+        products={landscapeProducts || []}
+        isLoading={landscapeLoading}
       />
 
       {/* Custom Canvas Section */}
@@ -127,13 +138,15 @@ const HomePage = () => {
 
       <ProductSection 
         title="Top Picks" 
-        products={sampleProducts.slice(2, 8)}
+        products={sportsProducts || []}
+        isLoading={sportsLoading}
       />
 
       <ProductSection 
         title="Film Collection" 
-        products={sampleProducts.slice(1, 7)}
+        products={filmProducts || []}
         className="bg-accent"
+        isLoading={filmLoading}
       />
 
 

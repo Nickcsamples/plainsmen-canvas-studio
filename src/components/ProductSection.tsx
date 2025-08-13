@@ -1,5 +1,6 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import ProductCard from "./ProductCard";
 
 interface Product {
@@ -16,6 +17,7 @@ interface ProductSectionProps {
   showMoreButton?: boolean;
   onShowMore?: () => void;
   className?: string;
+  isLoading?: boolean;
 }
 
 const ProductSection = ({ 
@@ -23,7 +25,8 @@ const ProductSection = ({
   products, 
   showMoreButton = false, 
   onShowMore,
-  className = ""
+  className = "",
+  isLoading = false
 }: ProductSectionProps) => {
   const scrollLeft = () => {
     const container = document.getElementById(`scroll-${title.replace(/\s+/g, '-').toLowerCase()}`);
@@ -72,11 +75,26 @@ const ProductSection = ({
           id={`scroll-${title.replace(/\s+/g, '-').toLowerCase()}`}
           className="flex space-x-6 overflow-x-auto scroll-container pb-4 mb-8"
         >
-          {products.map((product) => (
-            <div key={product.id} className="flex-none w-72">
-              <ProductCard {...product} />
-            </div>
-          ))}
+          {isLoading ? (
+            // Loading skeletons
+            Array.from({ length: 6 }).map((_, index) => (
+              <div key={`skeleton-${index}`} className="flex-none w-72">
+                <div className="gallery-card rounded-lg overflow-hidden bg-card">
+                  <Skeleton className="aspect-square w-full" />
+                  <div className="p-4 space-y-2">
+                    <Skeleton className="h-4 w-3/4" />
+                    <Skeleton className="h-4 w-1/2" />
+                  </div>
+                </div>
+              </div>
+            ))
+          ) : (
+            products.map((product) => (
+              <div key={product.id} className="flex-none w-72">
+                <ProductCard {...product} />
+              </div>
+            ))
+          )}
         </div>
 
         {/* Show More Button */}
