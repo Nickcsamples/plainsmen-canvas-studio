@@ -15,6 +15,7 @@ import FilmPage from "./pages/FilmPage";
 import SportsPage from "./pages/SportsPage";
 import AuthPage from "./pages/AuthPage";
 import WishlistPage from "./pages/WishlistPage";
+import DashboardPage from "./pages/DashboardPage";
 import NotFound from "./pages/NotFound";
 
 const App = () => (
@@ -35,6 +36,7 @@ const App = () => (
         <Route path="/sports" element={<SportsPage />} />
         <Route path="/auth" element={<AuthPage />} />
         <Route path="/wishlist" element={<WishlistPage />} />
+        <Route path="/dashboard" element={<DashboardPage />} />
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
         <Route path="*" element={<NotFound />} />
       </Routes>

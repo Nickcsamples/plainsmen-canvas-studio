@@ -82,7 +82,7 @@ const Header = () => {
 
             {/* Account */}
             <Button variant="ghost" size="icon" className="hover:bg-accent" asChild>
-              <Link to="/auth">
+              <Link to="/dashboard">
                 <User className="h-5 w-5" />
               </Link>
             </Button>
