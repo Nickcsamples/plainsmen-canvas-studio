@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Search, Heart, User, ShoppingCart, Menu, X } from "lucide-react";
+import { Search, Heart, User, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import CartDropdown from "./CartDropdown";
 
 const Header = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -72,9 +73,7 @@ const Header = () => {
             </Button>
 
             {/* Cart */}
-            <Button variant="ghost" size="icon" className="hover:bg-accent">
-              <ShoppingCart className="h-5 w-5" />
-            </Button>
+            <CartDropdown />
 
             {/* Mobile Menu Toggle */}
             <Button
