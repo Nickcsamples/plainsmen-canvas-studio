@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { customerReviews, visualCategories } from "@/data/sampleData";
-import { useFeaturedProducts, useProductsByCategory } from "@/hooks/useShopify";
+import { useFeaturedProducts, useProductsByCategory, useCollections } from "@/hooks/useShopify";
 import abstractLandscape from "@/assets/product-abstract-landscape.jpg";
 
 const HomePage = () => {
@@ -16,6 +16,17 @@ const HomePage = () => {
   const { data: filmProducts, isLoading: filmLoading } = useProductsByCategory('film', 8);
   const { data: abstractProducts, isLoading: abstractLoading } = useProductsByCategory('abstract', 8);
   const { data: sportsProducts, isLoading: sportsLoading } = useProductsByCategory('sports', 8);
+  const { data: collections, isLoading: collectionsLoading } = useCollections();
+
+  // Transform collections to visual categories for compatibility
+  const shopifyCategories = collections?.slice(0, 4).map(collection => ({
+    id: collection.handle,
+    title: collection.title,
+    image: collection.image?.url || visualCategories[0]?.image || ''
+  })) || [];
+
+  // Use Shopify categories if available, otherwise fallback to sample data
+  const displayCategories = shopifyCategories.length > 0 ? shopifyCategories : visualCategories;
 
   return (
     <div className="min-h-screen">
@@ -27,14 +38,21 @@ const HomePage = () => {
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-8">Shop by Category</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {visualCategories.map((category) => (
-              <CategoryCard
-                key={category.id}
-                title={category.title}
-                image={category.image}
-                onClick={() => console.log(`Navigate to ${category.id}`)}
-              />
-            ))}
+            {collectionsLoading ? (
+              // Loading skeletons for categories
+              Array.from({ length: 4 }).map((_, index) => (
+                <div key={`category-skeleton-${index}`} className="h-48 bg-muted animate-pulse rounded-lg" />
+              ))
+            ) : (
+              displayCategories.map((category) => (
+                <CategoryCard
+                  key={category.id}
+                  title={category.title}
+                  image={category.image}
+                  onClick={() => console.log(`Navigate to ${category.id}`)}
+                />
+              ))
+            )}
           </div>
         </div>
       </section>
