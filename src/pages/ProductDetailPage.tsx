@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useProduct, useCart } from "@/hooks/useShopify";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
+import { formatPrice } from "@/lib/utils";
 
 const ProductDetailPage = () => {
   const { handle } = useParams<{ handle: string }>();
@@ -62,19 +63,7 @@ const ProductDetailPage = () => {
     ? product.variants.find(v => v.id === selectedVariantId) || product.variants[0]
     : null;
   
-  const formatPrice = (price: any) => {
-    if (typeof price === 'string') return price;
-    if (price && typeof price === 'object' && price.amount && price.currencyCode) {
-      return `${price.currencyCode} $${parseFloat(price.amount).toFixed(2)}`;
-    }
-    // Handle unexpected object shape
-    if (typeof price === 'object') {
-      return 'Invalid price';
-    }
-    return product.price;
-  };
-  
-  const currentPrice = selectedVariant ? formatPrice(selectedVariant.price) : product.price;
+  const currentPrice = selectedVariant ? formatPrice(selectedVariant.price) : formatPrice(product.price);
 
   const handleAddToCart = async () => {
     if (!selectedVariant) {
