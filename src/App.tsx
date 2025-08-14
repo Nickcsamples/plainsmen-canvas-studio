@@ -2,6 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Routes, Route } from "react-router-dom";
+import { PWAInstallBanner } from "./components/PWAInstallBanner";
 import Layout from "./components/Layout";
 import HomePage from "./pages/HomePage";
 import ProductDetailPage from "./pages/ProductDetailPage";
@@ -15,6 +16,9 @@ import FilmPage from "./pages/FilmPage";
 import SportsPage from "./pages/SportsPage";
 import AuthPage from "./pages/AuthPage";
 import WishlistPage from "./pages/WishlistPage";
+import DashboardPage from "./pages/DashboardPage";
+import QATestingPage from "./pages/QATestingPage";
+import LaunchChecklistPage from "./pages/LaunchChecklistPage";
 import NotFound from "./pages/NotFound";
 
 const App = () => (
@@ -35,10 +39,14 @@ const App = () => (
         <Route path="/sports" element={<SportsPage />} />
         <Route path="/auth" element={<AuthPage />} />
         <Route path="/wishlist" element={<WishlistPage />} />
+        <Route path="/dashboard" element={<DashboardPage />} />
+        <Route path="/qa-testing" element={<QATestingPage />} />
+        <Route path="/launch-checklist" element={<LaunchChecklistPage />} />
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Layout>
+    <PWAInstallBanner />
   </TooltipProvider>
 );
 

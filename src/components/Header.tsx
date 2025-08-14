@@ -24,6 +24,9 @@ const Header = () => {
     { name: "Layouts", path: "/layouts" },
     { name: "Artists", path: "/artists" },
     { name: "Reviews", path: "/reviews" },
+    { name: "Dashboard", path: "/dashboard" },
+    { name: "QA Testing", path: "/qa-testing" },
+    { name: "Launch", path: "/launch-checklist" },
   ];
 
   const isActive = (path: string) => location.pathname === path;
@@ -82,7 +85,7 @@ const Header = () => {
 
             {/* Account */}
             <Button variant="ghost" size="icon" className="hover:bg-accent" asChild>
-              <Link to="/auth">
+              <Link to="/dashboard">
                 <User className="h-5 w-5" />
               </Link>
             </Button>

@@ -25,3 +25,24 @@ createRoot(document.getElementById('root')!).render(
     </QueryClientProvider>
   </StrictMode>,
 )
+
+// Initialize PWA
+const initializePWA = () => {
+  // Register service worker
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js')
+      .then((registration) => {
+        console.log('Service Worker registered:', registration);
+      })
+      .catch((error) => {
+        console.error('Service Worker registration failed:', error);
+      });
+  }
+  
+  // Track visit count for A/B testing
+  const visitCount = parseInt(localStorage.getItem('user-visit-count') || '0');
+  localStorage.setItem('user-visit-count', (visitCount + 1).toString());
+};
+
+// Initialize PWA after render
+setTimeout(initializePWA, 1000);
