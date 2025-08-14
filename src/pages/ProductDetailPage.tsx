@@ -64,8 +64,12 @@ const ProductDetailPage = () => {
   
   const formatPrice = (price: any) => {
     if (typeof price === 'string') return price;
-    if (price && price.amount && price.currencyCode) {
+    if (price && typeof price === 'object' && price.amount && price.currencyCode) {
       return `${price.currencyCode} $${parseFloat(price.amount).toFixed(2)}`;
+    }
+    // Handle unexpected object shape
+    if (typeof price === 'object') {
+      return 'Invalid price';
     }
     return product.price;
   };
