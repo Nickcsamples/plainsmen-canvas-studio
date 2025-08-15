@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useProduct, useCart } from "@/hooks/useShopify";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
+import { formatPrice } from "@/lib/utils";
 
 
 const ProductDetailPage = () => {
@@ -59,19 +60,14 @@ const ProductDetailPage = () => {
     );
   }
 
+  // Auto-select first variant if none selected and variants exist
+  const effectiveVariantId = selectedVariantId || (product.variants?.[0]?.id ?? "");
+  
   const selectedVariant = product.variants && product.variants.length > 0 
-    ? product.variants.find(v => v.id === selectedVariantId) || product.variants[0]
+    ? product.variants.find(v => v.id === effectiveVariantId) || product.variants[0]
     : null;
   
-  const formatPrice = (price: any) => {
-
-    if (typeof price === 'object') {
-      return price = "100.00"; // Fallback for object type, adjust as needed
-    }
-    // Fallback for other types (undefined, null, etc.)
-    return '$0.00';
-  };
-    const currentPrice = selectedVariant ? formatPrice(selectedVariant.price) : product.price;
+  const currentPrice = selectedVariant ? formatPrice(selectedVariant.price) : product.price;
 
   const handleAddToCart = async () => {
     if (!selectedVariant) {
@@ -197,7 +193,7 @@ const ProductDetailPage = () => {
             {product.variants && product.variants.length > 1 && (
               <div>
                 <h3 className="font-semibold mb-3">Options</h3>
-                <Select value={selectedVariantId} onValueChange={setSelectedVariantId}>
+                <Select value={effectiveVariantId} onValueChange={setSelectedVariantId}>
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="Select an option" />
                   </SelectTrigger>
