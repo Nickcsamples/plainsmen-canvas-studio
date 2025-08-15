@@ -69,9 +69,9 @@ const ProductDetailPage = () => {
     if (price && typeof price === 'object' && price.amount && price.currencyCode) {
       return `${price.currencyCode} $${parseFloat(price.amount).toFixed(2)}`;
     }
-    // Handle unexpected object shape
+    // Convert any other object to a JSON string
     if (typeof price === 'object') {
-      return 'Invalid price';
+      return JSON.stringify(price);
     }
     // Fallback for other types (undefined, null, etc.)
     return '$0.00';
