@@ -80,22 +80,22 @@ export const visualCategories = [
   {
     id: "film",
     title: "Film Wall Art",
-    image: ""
+    image: abstractLandscape
   },
   {
     id: "sports",
     title: "Sports Wall Art", 
-    image: ""
+    image: geometricPatterns
   },
   {
     id: "scenic",
     title: "Scenic Wall Art",
-    image: ""
+    image: portraitStudy
   },
   {
     id: "ocean",
     title: "Ocean Wall Art",
-    image: ""
+    image: dynamicMovement
   }
 ];
 
