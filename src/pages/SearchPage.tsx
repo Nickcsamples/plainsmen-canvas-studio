@@ -11,7 +11,6 @@ import ProductCard from "@/components/ProductCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useSearchProducts, useCollections } from "@/hooks/useShopify";
 import { useDebounce } from "@/hooks/use-debounce";
-import { getPriceValue } from "@/lib/utils";
 
 const SearchPage = () => {
   const [searchParams] = useSearchParams();
@@ -59,7 +58,7 @@ const SearchPage = () => {
     // Filter by price range
     if (priceRange) {
       filtered = filtered.filter(product => {
-        const price = getPriceValue(product.price);
+        const price = parseFloat(product.price.replace(/[^0-9.]/g, ''));
         switch (priceRange) {
           case 'under-50':
             return price < 50;
@@ -79,15 +78,15 @@ const SearchPage = () => {
     switch (sortBy) {
       case 'price-low':
         filtered.sort((a, b) => {
-          const priceA = getPriceValue(a.price);
-          const priceB = getPriceValue(b.price);
+          const priceA = parseFloat(a.price.replace(/[^0-9.]/g, ''));
+          const priceB = parseFloat(b.price.replace(/[^0-9.]/g, ''));
           return priceA - priceB;
         });
         break;
       case 'price-high':
         filtered.sort((a, b) => {
-          const priceA = getPriceValue(a.price);
-          const priceB = getPriceValue(b.price);
+          const priceA = parseFloat(a.price.replace(/[^0-9.]/g, ''));
+          const priceB = parseFloat(b.price.replace(/[^0-9.]/g, ''));
           return priceB - priceA;
         });
         break;

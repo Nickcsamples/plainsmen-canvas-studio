@@ -98,10 +98,7 @@ export interface AppProduct {
   id: string;
   image: string;
   title: string;
-  price: {
-    amount: string;
-    currencyCode: string;
-  };
+  price: string;
   category?: string;
   handle?: string;
   description?: string;

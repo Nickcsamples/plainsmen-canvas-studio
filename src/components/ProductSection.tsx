@@ -8,7 +8,7 @@ interface Product {
   handle?: string;
   image: string;
   title: string;
-  price: string | { amount: string; currencyCode: string };
+  price: string;
   category?: string;
 }
 

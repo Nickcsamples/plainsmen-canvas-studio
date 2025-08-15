@@ -9,7 +9,6 @@ import ProductCard from "@/components/ProductCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useProductsByCategory } from "@/hooks/useShopify";
 import { sampleProducts } from "@/data/sampleData";
-import { getPriceValue } from "@/lib/utils";
 
 const SportsPage = () => {
   const [showFilters, setShowFilters] = useState(false);
@@ -83,15 +82,15 @@ const SportsPage = () => {
     switch (sortBy) {
       case 'price-low':
         filtered.sort((a, b) => {
-          const priceA = getPriceValue(a.price);
-          const priceB = getPriceValue(b.price);
+          const priceA = parseFloat(a.price.replace(/[^0-9.]/g, ''));
+          const priceB = parseFloat(b.price.replace(/[^0-9.]/g, ''));
           return priceA - priceB;
         });
         break;
       case 'price-high':
         filtered.sort((a, b) => {
-          const priceA = getPriceValue(a.price);
-          const priceB = getPriceValue(b.price);
+          const priceA = parseFloat(a.price.replace(/[^0-9.]/g, ''));
+          const priceB = parseFloat(b.price.replace(/[^0-9.]/g, ''));
           return priceB - priceA;
         });
         break;
