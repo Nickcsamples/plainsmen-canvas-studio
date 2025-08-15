@@ -64,6 +64,7 @@ const ProductDetailPage = () => {
   
   const formatPrice = (price: any) => {
     if (typeof price === 'string') return price;
+    if (typeof price === 'number') return `$${price.toFixed(2)}`;
     if (price && typeof price === 'object' && price.amount && price.currencyCode) {
       return `${price.currencyCode} $${parseFloat(price.amount).toFixed(2)}`;
     }
@@ -71,7 +72,8 @@ const ProductDetailPage = () => {
     if (typeof price === 'object') {
       return 'Invalid price';
     }
-    return product.price;
+    // Fallback for other types (undefined, null, etc.)
+    return '$0.00';
   };
   
   const currentPrice = selectedVariant ? formatPrice(selectedVariant.price) : product.price;
