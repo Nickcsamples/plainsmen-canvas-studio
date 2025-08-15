@@ -67,7 +67,7 @@ const ProductDetailPage = () => {
     ? product.variants.find(v => v.id === effectiveVariantId) || product.variants[0]
     : null;
   
-  const currentPrice = selectedVariant ? formatPrice(selectedVariant.price) : product.price;
+  const currentPrice = selectedVariant ? formatPrice(selectedVariant.price) : formatPrice(product.price);
 
   const handleAddToCart = async () => {
     if (!selectedVariant) {

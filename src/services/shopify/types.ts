@@ -98,7 +98,10 @@ export interface AppProduct {
   id: string;
   image: string;
   title: string;
-  price: string;
+  price: {
+    amount: string;
+    currencyCode: string;
+  };
   category?: string;
   handle?: string;
   description?: string;

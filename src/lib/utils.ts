@@ -32,3 +32,23 @@ export function formatPrice(price: any): string {
   // Fallback for unexpected formats
   return "$0.00";
 }
+
+export function getPriceValue(price: any): number {
+  if (typeof price === 'string') {
+    // Extract numeric value from string like "$94.99 USD" or "$94.99"
+    const match = price.replace(/[^0-9.]/g, '');
+    return parseFloat(match) || 0;
+  }
+  
+  // Handle price objects from Shopify
+  if (typeof price === 'object' && price.amount) {
+    return parseFloat(price.amount) || 0;
+  }
+  
+  // Handle numeric values
+  if (typeof price === 'number') {
+    return price;
+  }
+  
+  return 0;
+}
