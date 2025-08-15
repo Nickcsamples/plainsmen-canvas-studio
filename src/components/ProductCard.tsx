@@ -2,13 +2,14 @@ import { Heart } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { formatPrice } from "@/lib/utils";
 
 interface ProductCardProps {
   id: string;
   handle?: string;
   image: string;
   title: string;
-  price: string;
+  price: string | { amount: string; currencyCode: string };
   category?: string;
   isWishlisted?: boolean;
   onWishlistToggle?: (id: string) => void;
@@ -76,7 +77,7 @@ const ProductCard = ({
       {/* Product Info */}
       <div className="p-4">
         <h3 className="font-medium text-card-foreground truncate">{title}</h3>
-        <p className="text-lg font-semibold text-primary mt-1">{price}</p>
+        <p className="text-lg font-semibold text-primary mt-1">{formatPrice(price)}</p>
       </div>
     </div>
   );

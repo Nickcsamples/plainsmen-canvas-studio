@@ -160,15 +160,12 @@ class ShopifyStorefrontService {
       description: product.description,
       image: product.images[0]?.src || '',
       images: product.images.map((img: any) => img.src),
-      price: `$${product.variants[0]?.price || '0.00'} USD`,
+      price: product.variants[0]?.priceV2 || product.priceRange?.minVariantPrice || { amount: "0.00", currencyCode: "USD" },
       category: product.productType || 'Art',
       variants: product.variants.map((variant: any) => ({
         id: variant.id,
         title: variant.title,
-        price: {
-          amount: variant.price,
-          currencyCode: 'USD'
-        },
+        price: variant.priceV2 || { amount: variant.price || "0.00", currencyCode: "USD" },
         availableForSale: variant.available,
         quantityAvailable: variant.inventory_quantity || 0,
         selectedOptions: variant.selectedOptions || [],
