@@ -59,15 +59,8 @@ const CartPage = () => {
   };
 
   const handleCheckout = () => {
-    // Shopify Buy SDK uses webUrl for checkout URL
-    if (cart?.webUrl) {
-      window.open(cart.webUrl, '_blank');
-    } else {
-      toast({
-        title: "Error",
-        description: "Unable to proceed to checkout. Please try again.",
-        variant: "destructive",
-      });
+    if (cart?.checkoutUrl) {
+      window.open(cart.checkoutUrl, '_blank');
     }
   };
 
@@ -172,7 +165,10 @@ const CartPage = () => {
                         
                         <div className="text-right">
                           <p className="font-semibold">
-                            {item.variant.price?.currencyCode} {parseFloat(item.variant.price?.amount || '0').toFixed(2)}
+                            ${typeof item.variant.price === 'string' 
+                              ? item.variant.price 
+                              : `${parseFloat(item.variant.price.amount).toFixed(2)}`
+                            }
                           </p>
                           <Button
                             variant="ghost"
@@ -201,7 +197,10 @@ const CartPage = () => {
                   <div className="flex justify-between">
                     <span>Subtotal</span>
                     <span>
-                      {cart.subtotalPrice?.currencyCode} {parseFloat(cart.subtotalPrice?.amount || '0').toFixed(2)}
+                      ${typeof cart.subtotalPrice === 'string' 
+                        ? cart.subtotalPrice 
+                        : parseFloat(cart.subtotalPrice.amount).toFixed(2)
+                      }
                     </span>
                   </div>
                   
@@ -209,7 +208,10 @@ const CartPage = () => {
                     <div className="flex justify-between">
                       <span>Tax</span>
                       <span>
-                        {cart.totalTax?.currencyCode} {parseFloat(cart.totalTax?.amount || '0').toFixed(2)}
+                        ${typeof cart.totalTax === 'string' 
+                          ? cart.totalTax 
+                          : parseFloat(cart.totalTax.amount).toFixed(2)
+                        }
                       </span>
                     </div>
                   )}
@@ -219,7 +221,10 @@ const CartPage = () => {
                   <div className="flex justify-between font-semibold text-lg">
                     <span>Total</span>
                     <span>
-                      {cart.totalPrice?.currencyCode} {parseFloat(cart.totalPrice?.amount || '0').toFixed(2)}
+                      ${typeof cart.totalPrice === 'string' 
+                        ? cart.totalPrice 
+                        : parseFloat(cart.totalPrice.amount).toFixed(2)
+                      }
                     </span>
                   </div>
                 </div>
