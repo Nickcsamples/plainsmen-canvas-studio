@@ -1,6 +1,5 @@
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
 import { Routes, Route } from "react-router-dom";
 import { PWAInstallBanner } from "./components/PWAInstallBanner";
 import Layout from "./components/Layout";
@@ -22,7 +21,7 @@ import LaunchChecklistPage from "./pages/LaunchChecklistPage";
 import NotFound from "./pages/NotFound";
 
 const App = () => (
-  <TooltipProvider>
+  <>
     <Toaster />
     <Sonner />
     <Layout>
@@ -47,7 +46,7 @@ const App = () => (
       </Routes>
     </Layout>
     <PWAInstallBanner />
-  </TooltipProvider>
+  </>
 );
 
 export default App;
