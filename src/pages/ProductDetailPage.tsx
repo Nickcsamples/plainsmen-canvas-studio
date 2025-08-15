@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useProduct, useCart } from "@/hooks/useShopify";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
-import { formatPrice } from "@/lib/utils";
+
 
 const ProductDetailPage = () => {
   const { handle } = useParams<{ handle: string }>();
@@ -74,6 +74,7 @@ const ProductDetailPage = () => {
     }
     return product.price;
   };
+    const currentPrice = selectedVariant ? formatPrice(selectedVariant.price) : product.price;
 
   const handleAddToCart = async () => {
     if (!selectedVariant) {
