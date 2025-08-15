@@ -54,9 +54,16 @@ const CartDropdown = ({ className = "" }: CartDropdownProps) => {
   };
 
   const handleCheckout = () => {
-    if (cart?.checkoutUrl) {
-      window.open(cart.checkoutUrl, '_blank');
+    // Shopify Buy SDK uses webUrl for checkout URL
+    if (cart?.webUrl) {
+      window.open(cart.webUrl, '_blank');
       setIsOpen(false);
+    } else {
+      toast({
+        title: "Error",
+        description: "Unable to proceed to checkout. Please try again.",
+        variant: "destructive",
+      });
     }
   };
 
@@ -167,10 +174,7 @@ const CartDropdown = ({ className = "" }: CartDropdownProps) => {
                         
                         <div className="flex items-center gap-2">
                           <span className="text-sm font-medium">
-                            ${typeof item.variant.price === 'string' 
-                              ? item.variant.price 
-                              : parseFloat(item.variant.price.amount).toFixed(2)
-                            }
+                            {item.variant.price?.currencyCode} {parseFloat(item.variant.price?.amount || '0').toFixed(2)}
                           </span>
                           <Button
                             variant="ghost"
@@ -194,10 +198,7 @@ const CartDropdown = ({ className = "" }: CartDropdownProps) => {
                   <div className="flex justify-between text-sm">
                     <span>Subtotal</span>
                     <span>
-                      ${typeof cart?.subtotalPrice === 'string' 
-                        ? cart.subtotalPrice 
-                        : parseFloat(cart?.subtotalPrice?.amount || '0').toFixed(2)
-                      }
+                      {cart?.subtotalPrice?.currencyCode} {parseFloat(cart?.subtotalPrice?.amount || '0').toFixed(2)}
                     </span>
                   </div>
                   
@@ -206,10 +207,7 @@ const CartDropdown = ({ className = "" }: CartDropdownProps) => {
                   <div className="flex justify-between font-semibold">
                     <span>Total</span>
                     <span>
-                      ${typeof cart?.totalPrice === 'string' 
-                        ? cart.totalPrice 
-                        : parseFloat(cart?.totalPrice?.amount || '0').toFixed(2)
-                      }
+                      {cart?.totalPrice?.currencyCode} {parseFloat(cart?.totalPrice?.amount || '0').toFixed(2)}
                     </span>
                   </div>
                 </div>
