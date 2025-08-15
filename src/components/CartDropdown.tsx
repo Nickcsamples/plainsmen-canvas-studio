@@ -129,7 +129,7 @@ const CartDropdown = ({ className = "" }: CartDropdownProps) => {
                 {cart?.lineItems.map((item) => (
                   <div key={item.id} className="flex gap-3 p-3 border rounded-lg">
                     <img
-                      src={item.variant.image?.url || "/placeholder.svg"}
+                      src={item.variant.image?.url || ""}
                       alt={item.title}
                       className="w-16 h-16 object-cover rounded-md flex-shrink-0"
                     />

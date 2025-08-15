@@ -20,7 +20,7 @@ export function OptimizedImage({
   height,
   priority = false,
   className,
-  fallback = '/placeholder.svg',
+  fallback = '',
   onLoad,
   onError,
   ...props

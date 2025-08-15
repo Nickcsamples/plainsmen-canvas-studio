@@ -13,9 +13,9 @@ import { Upload, Heart, Star } from "lucide-react";
 
 // Sample layout, size, and frame data
 const layouts = [
-  { id: "portrait", name: "Portrait", image: "/placeholder.svg", description: "Classic vertical layout" },
-  { id: "landscape", name: "Landscape", image: "/placeholder.svg", description: "Wide horizontal layout" },
-  { id: "square", name: "Square", image: "/placeholder.svg", description: "Perfect square format" },
+  { id: "portrait", name: "Portrait", image: "", description: "Classic vertical layout" },
+  { id: "landscape", name: "Landscape", image: "", description: "Wide horizontal layout" },
+  { id: "square", name: "Square", image: "", description: "Perfect square format" },
 ];
 
 const sizes = [
