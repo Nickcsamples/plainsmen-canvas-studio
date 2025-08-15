@@ -9,7 +9,14 @@ export function formatPrice(price: any): string {
   // Handle null or undefined
   if (!price) return "$0.00";
   
-  // Handle already formatted string prices (like "$94.99 USD")
+  // Handle Shopify native price objects first (priceV2 format)
+  if (typeof price === 'object' && price.amount && price.currencyCode) {
+    const amount = parseFloat(price.amount);
+    const symbol = price.currencyCode === 'USD' ? '$' : price.currencyCode;
+    return isNaN(amount) ? "$0.00" : `${symbol}${amount.toFixed(2)}`;
+  }
+  
+  // Handle already formatted string prices (like "$94.99 USD") - legacy support
   if (typeof price === 'string') {
     // If it already contains currency, return as is
     if (price.includes('$') || price.includes('USD')) return price;
@@ -18,13 +25,7 @@ export function formatPrice(price: any): string {
     return isNaN(num) ? "$0.00" : `$${num.toFixed(2)}`;
   }
   
-  // Handle Shopify price objects with amount and currencyCode
-  if (typeof price === 'object' && price.amount && price.currencyCode) {
-    const amount = parseFloat(price.amount);
-    return isNaN(amount) ? "$0.00" : `$${amount.toFixed(2)}`;
-  }
-  
-  // Handle numeric values
+  // Handle numeric values - legacy support
   if (typeof price === 'number') {
     return `$${price.toFixed(2)}`;
   }
